@@ -28,7 +28,7 @@ public class ParseAAO {
 			if (inSection){
 				Matcher as = assignment.matcher(line);
 				if (as.find()) {
-					parseAssignments();
+					parseAssignments(as.group(2));
 				}
 			}
 			
