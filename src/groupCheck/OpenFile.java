@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class OpenFile {
 	String file;
@@ -12,17 +13,15 @@ public class OpenFile {
 		this.file = file;
 	}
 
-	public String[] getOMs() {
-		String[] oms;
-		StringBuilder om = new StringBuilder();
+	public ArrayList<String> getOMs() {
+		ArrayList<String> data = new ArrayList<String>();
 		String line = null;
 		BufferedReader br;
 
 		try {
 			br = new BufferedReader(new FileReader(file));
 			while ((line = br.readLine()) != null) {
-				om.append(line);
-				om.append("\n");
+				data.add(line);
 			}
 			br.close();
 		} catch (FileNotFoundException fe) {
@@ -33,8 +32,6 @@ public class OpenFile {
 			System.exit(1);
 
 		}
-		oms = om.toString().split("\n");
-		return oms;
+		return data;
 	}
-
 }
