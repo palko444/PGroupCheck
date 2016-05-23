@@ -11,8 +11,8 @@ import runComm.CommandResult;
 
 public class Parseht {
 
-	public HashMap<String, HashMap<String[], ArrayList<String>[]>> parseHt() {
-		HashMap<String, HashMap<String[], ArrayList<String>[]>> htData = new HashMap<String, HashMap<String[], ArrayList<String>[]>>();
+	public HashMap<String, NodeData> parseHt() {
+		HashMap<String, NodeData> htData = new HashMap<String, Parseht.NodeData>();
 		CommandResult cspht = null;
 		try {
 			// cspht = CommandExecutor.exec(new String[] { "/opt/OV/bin/OpC/call_sqlplus.sh", "h_t" }, 5);
@@ -32,8 +32,13 @@ public class Parseht {
 		return htData;
 	}
 
-	private HashMap<String, HashMap<String[], ArrayList<String>[]>> parseLine(String lines) {
-		HashMap<String, HashMap<String[], ArrayList<String>[]>> htData = new HashMap<String, HashMap<String[], ArrayList<String>[]>>();
+	private class NodeData {
+		HashMap<String, ArrayList<String>> fqdns = new HashMap<String, ArrayList<String>>();
+		Boolean bsmEnabled = false;
+	}
+	
+	private HashMap<String, NodeData> parseLine(String lines) {
+		HashMap<String, NodeData> htData = new HashMap<String, NodeData>();
 		Pattern p = Pattern.compile("(\\S*)\\s+NG\\s+(C_.*|P_.*)");
 
 		for (String line : lines.split("\n")) {
@@ -41,7 +46,21 @@ public class Parseht {
 			if (m.matches()) {
 				String fqdn = m.group(1);
 				String domain = getDomain(fqdn);
-				ArrayList<String> group = new ArrayList<String>();
+				String group = m.group(2);
+				
+				if (! htData.containsKey(domain)) {
+					htData.put(domain, new NodeData());
+				}
+				//check bsm flag;
+				NodeData nd = htData.get(domain);
+				
+				if (!nd.fqdns.containsKey(fqdn)) {
+					nd.fqdns.put(fqdn, new ArrayList<String>());
+				}
+				ArrayList<String> cpg = nd.fqdns.get(fqdn);
+				cpg.add(group);
+				}
+				
 
 			}
 
