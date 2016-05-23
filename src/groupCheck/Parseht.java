@@ -11,13 +11,14 @@ import runComm.CommandResult;
 
 public class Parseht {
 
-	public HashMap<String, NodeData> parseHt() {
-		HashMap<String, NodeData> htData = new HashMap<String, Parseht.NodeData>();
+	public HashMap<String, DomainData> parseHt() {
+		HashMap<String, DomainData> htData = new HashMap<String, DomainData>();
 		CommandResult cspht = null;
 		try {
 			// cspht = CommandExecutor.exec(new String[] { "/opt/OV/bin/OpC/call_sqlplus.sh", "h_t" }, 5);
 			cspht = CommandExecutor.exec(new String[] { "cat", "/home/pala/ng/ng_o" }, 5000);
-		} catch (IOException io) {
+		}
+		catch (IOException io) {
 			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t");
 			System.exit(1);
 		}
@@ -32,13 +33,8 @@ public class Parseht {
 		return htData;
 	}
 
-	private class NodeData {
-		HashMap<String, ArrayList<String>> fqdns = new HashMap<String, ArrayList<String>>();
-		Boolean bsmEnabled = false;
-	}
-	
-	private HashMap<String, NodeData> parseLine(String lines) {
-		HashMap<String, NodeData> htData = new HashMap<String, NodeData>();
+	private HashMap<String, DomainData> parseLine(String lines) {
+		HashMap<String, DomainData> htData = new HashMap<String, DomainData>();
 		Pattern p = Pattern.compile("(\\S*)\\s+NG\\s+(C_.*|P_.*)");
 
 		for (String line : lines.split("\n")) {
@@ -47,21 +43,28 @@ public class Parseht {
 				String fqdn = m.group(1);
 				String domain = getDomain(fqdn);
 				String group = m.group(2);
-				
-				if (! htData.containsKey(domain)) {
-					htData.put(domain, new NodeData());
+				DomainData nd;
+
+				if (!htData.containsKey(domain)) {
+					htData.put(domain, new DomainData());
+					nd = htData.get(domain);
+				} else {
+					nd = htData.get(domain);
 				}
-				//check bsm flag;
-				NodeData nd = htData.get(domain);
-				
+
+				if (!nd.bsmEnabled) {
+					nd.bsmEnabled = checkBSMFLag(group);
+
+				}
+
 				if (!nd.fqdns.containsKey(fqdn)) {
 					nd.fqdns.put(fqdn, new ArrayList<String>());
+					ArrayList<String> cpg = nd.fqdns.get(fqdn);
+					cpg.add(group);
+				} else {
+					ArrayList<String> cpg = nd.fqdns.get(fqdn);
+					cpg.add(group);
 				}
-				ArrayList<String> cpg = nd.fqdns.get(fqdn);
-				cpg.add(group);
-				}
-				
-
 			}
 
 		}
@@ -72,5 +75,13 @@ public class Parseht {
 	private String getDomain(String fqdn) {
 		String[] s = fqdn.split("\\.", 2);
 		return s[1];
+	}
+
+	private Boolean checkBSMFLag(String group) {
+		if (group.equals("P_PROD_OMI") || group.equals("P_RTP_OMI")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -1,6 +1,5 @@
 package groupCheck;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ public class Main {
 		ParseAAO a = new ParseAAO();
 		Parseht b = new Parseht();
 		HashMap<String, String[]> aa = a.parseDomains();
-		HashMap<String, HashMap<String[], ArrayList<String>[]>> bb = b.parseHt();
+		HashMap<String, DomainData> bb = b.parseHt();
 		
 
 //		for (Map.Entry<String, String[]> entry : aa.entrySet()) {
@@ -26,6 +25,12 @@ public class Main {
 //			System.out.println();
 
 //		}
+		
+		for (Map.Entry<String,DomainData> entry : bb.entrySet()) {
+			String domain = entry.getKey();
+			DomainData dd = entry.getValue();
+			System.out.println("domain: " + domain + " bsm flag: " + dd.bsmEnabled);
+		}
 
 	}
 
