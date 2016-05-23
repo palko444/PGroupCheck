@@ -9,7 +9,7 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		ParseAAO a = new ParseAAO();
-		Parseht b = new Parseht();
+		ParsehNg b = new ParsehNg();
 		HashMap<String, String[]> aa = a.parseDomains();
 		HashMap<String, DomainData> bb = b.parseHt();
 		

@@ -9,28 +9,28 @@ import java.util.regex.Pattern;
 import runComm.CommandExecutor;
 import runComm.CommandResult;
 
-public class Parseht {
+public class ParsehNg {
 
 	public HashMap<String, DomainData> parseHt() {
-		HashMap<String, DomainData> htData = new HashMap<String, DomainData>();
-		CommandResult cspht = null;
+		HashMap<String, DomainData> ngData = new HashMap<String, DomainData>();
+		CommandResult cspNg = null;
 		try {
-			// cspht = CommandExecutor.exec(new String[] { "/opt/OV/bin/OpC/call_sqlplus.sh", "h_t" }, 5);
-			cspht = CommandExecutor.exec(new String[] { "cat", "/home/pala/ng/ng_o" }, 5000);
+			// cspNg = CommandExecutor.exec(new String[] { "/opt/OV/bin/OpC/call_sqlplus.sh", "h_t" }, 5000);
+			cspNg = CommandExecutor.exec(new String[] { "cat", "/home/pala/ng/ng_o" }, 5000);
 		}
 		catch (IOException io) {
 			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t");
 			System.exit(1);
 		}
 
-		if (cspht.rc != 0) {
-			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t");
+		if (cspNg.rc != 0) {
+			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t. Return code: " + cspNg.rc );
 			System.exit(1);
 		}
 
-		htData = parseLine(cspht.stdout);
+		ngData = parseLine(cspNg.stdout);
 
-		return htData;
+		return ngData;
 	}
 
 	private HashMap<String, DomainData> parseLine(String lines) {
@@ -46,14 +46,14 @@ public class Parseht {
 				DomainData nd;
 
 				if (!htData.containsKey(domain)) {
-					htData.put(domain, new DomainData());
-					nd = htData.get(domain);
+					nd = new DomainData();
+					htData.put(domain, nd);
 				} else {
 					nd = htData.get(domain);
 				}
 
 				if (!nd.bsmEnabled) {
-					nd.bsmEnabled = checkBSMFLag(group);
+					nd.bsmEnabled = checkBsmFLag(group);
 				}
 
 				if (!nd.fqdns.containsKey(fqdn)) {
@@ -65,22 +65,15 @@ public class Parseht {
 					cpg.add(group);
 				}
 			}
-
 		}
-
 		return htData;
 	}
 
 	private String getDomain(String fqdn) {
-		String[] s = fqdn.split("\\.", 2);
-		return s[1];
+		return fqdn.split("\\.", 2)[1];
 	}
 
-	private Boolean checkBSMFLag(String group) {
-		if (group.equals("P_PROD_OMI") || group.equals("P_RTP_OMI")) {
-			return true;
-		} else {
-			return false;
-		}
+	private Boolean checkBsmFLag(String group) {
+		return (group.equals("P_PROD_OMI") || group.equals("P_RTP_OMI")); 
 	}
 }

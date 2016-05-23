@@ -40,7 +40,6 @@ public class ParseAAO {
 	}
 
 	private String[] parseAssignments(String domains) {
-		String[] pGroups = domains.split(";");
-		return pGroups;
+		return domains.split(";");
 	}
 }
