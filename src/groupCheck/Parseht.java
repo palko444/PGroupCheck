@@ -54,12 +54,11 @@ public class Parseht {
 
 				if (!nd.bsmEnabled) {
 					nd.bsmEnabled = checkBSMFLag(group);
-
 				}
 
 				if (!nd.fqdns.containsKey(fqdn)) {
-					nd.fqdns.put(fqdn, new ArrayList<String>());
-					ArrayList<String> cpg = nd.fqdns.get(fqdn);
+					ArrayList<String> cpg = new ArrayList<String>();
+					nd.fqdns.put(fqdn, cpg);
 					cpg.add(group);
 				} else {
 					ArrayList<String> cpg = nd.fqdns.get(fqdn);
