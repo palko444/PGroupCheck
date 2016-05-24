@@ -24,7 +24,7 @@ public class ParsehNg {
 		}
 
 		if (cspNg.rc != 0) {
-			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t. Return code: " + cspNg.rc );
+			System.out.println("WARNING: Cannot run /opt/OV/bin/OpC/call_sqlplus.sh h_t. Return code: " + cspNg.rc);
 			System.exit(1);
 		}
 
@@ -74,6 +74,6 @@ public class ParsehNg {
 	}
 
 	private Boolean checkBsmFLag(String group) {
-		return (group.equals("P_PROD_OMI") || group.equals("P_RTP_OMI")); 
+		return (group.equals("P_PROD_OMI") || group.equals("P_RTP_OMI"));
 	}
 }

@@ -1,5 +1,7 @@
 package groupCheck;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,9 +11,9 @@ public class ParseAAO {
 	// final private String aaoCfg = "/opt/OpC_local/AutoAgentOnboarding/conf/aao_assignment.cfg";
 	final private String aaoCfg = "/home/pala/ng/aao_assignment.cfg";
 
-	public HashMap<String, String[]> parseDomains() {
+	public HashMap<String, ArrayList<String>> parseDomains() {
 		Boolean inSection = false;
-		HashMap<String, String[]> aaoData = new HashMap<String, String[]>();
+		HashMap<String, ArrayList<String>> aaoData = new HashMap<String, ArrayList<String>>();
 
 		Pattern ignore = Pattern.compile("^#|^\\s*$");
 		Pattern assignment = Pattern.compile("\\s*(.*)\\s*=\\s*(.*)\\s*$");
@@ -39,7 +41,7 @@ public class ParseAAO {
 		return aaoData;
 	}
 
-	private String[] parseAssignments(String domains) {
-		return domains.split(";");
+	private ArrayList<String> parseAssignments(String domains) {
+		return new ArrayList<String>(Arrays.asList(domains.split(";")));
 	}
 }
